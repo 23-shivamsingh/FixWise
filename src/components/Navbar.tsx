@@ -118,102 +118,107 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenScanner }) => {
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-2xs w-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-17 gap-2 lg:gap-4">
+        <div className="flex items-center justify-between h-16 sm:h-17 gap-2 sm:gap-4">
           
-          {/* Brand Logo & Tagline */}
-          <div
-            onClick={() => setActiveTab('home')}
-            className="flex items-center gap-2.5 cursor-pointer group shrink-0"
-          >
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-700 group-hover:bg-emerald-800 text-white flex items-center justify-center shadow-md shadow-emerald-700/20 transition-transform group-hover:scale-105 shrink-0">
-              <div className="relative flex items-center justify-center">
-                <RotateCcw className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-emerald-200" />
-                <Wrench className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white absolute" />
+          {/* Left: Brand Logo & Desktop Navigation Links */}
+          <div className="flex items-center gap-3 lg:gap-4 xl:gap-6 min-w-0">
+            {/* Brand Logo & Tagline */}
+            <div
+              onClick={() => setActiveTab('home')}
+              className="flex items-center gap-2.5 cursor-pointer group shrink-0"
+            >
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-700 group-hover:bg-emerald-800 text-white flex items-center justify-center shadow-md shadow-emerald-700/20 transition-transform group-hover:scale-105 shrink-0">
+                <div className="relative flex items-center justify-center">
+                  <RotateCcw className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-emerald-200" />
+                  <Wrench className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-white absolute" />
+                </div>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 leading-tight font-['Plus_Jakarta_Sans',sans-serif]">
+                  FixWise<span className="text-emerald-600">AI</span>
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium tracking-tight hidden sm:block">
+                  Repair smarter. Replace less.
+                </span>
               </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-base sm:text-lg font-black tracking-tight text-slate-900 leading-tight font-['Plus_Jakarta_Sans',sans-serif]">
-                FixWise<span className="text-emerald-600">AI</span>
-              </span>
-              <span className="text-[10px] text-slate-400 font-medium tracking-tight hidden sm:block">
-                Repair smarter. Replace less.
-              </span>
-            </div>
-          </div>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
-            {primaryTabs.map((link) => {
-              const isActive = activeTab === link.id;
-              return (
-                <button
-                  key={link.id}
-                  onClick={() => setActiveTab(link.id)}
-                  className={`px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 whitespace-nowrap ${
-                    isActive
-                      ? 'bg-emerald-50 text-emerald-800 font-extrabold ring-1 ring-emerald-200/60 shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-950 hover:bg-emerald-50/50'
-                  }`}
-                >
-                  {link.label}
-                </button>
-              );
-            })}
+            {/* Desktop Navigation Links */}
+            <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1">
+              {primaryTabs.map((link) => {
+                const isActive = activeTab === link.id;
+                return (
+                  <button
+                    key={link.id}
+                    onClick={() => setActiveTab(link.id)}
+                    className={`px-2 xl:px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 whitespace-nowrap ${
+                      isActive
+                        ? 'bg-emerald-50 text-emerald-800 font-extrabold ring-1 ring-emerald-200/60 shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-950 hover:bg-emerald-50/50'
+                    }`}
+                  >
+                    {link.label}
+                  </button>
+                );
+              })}
 
-            {/* Secondary More Dropdown */}
-            <div className="relative" ref={moreRef}>
-              <button
-                onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
-                className={`px-2.5 xl:px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 flex items-center gap-1 whitespace-nowrap ${
-                  isSecondaryActive
-                    ? 'bg-emerald-50 text-emerald-800 font-extrabold ring-1 ring-emerald-200/60 shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-950 hover:bg-emerald-50/50'
-                }`}
-              >
-                <span>
-                  {isSecondaryActive
-                    ? secondaryTabs.find((t) => t.id === activeTab)?.label || 'More'
-                    : 'More'}
-                </span>
-                <ChevronDown className="w-3 h-3 text-slate-400" />
-              </button>
+              {/* Secondary More Dropdown (Shown on desktop for Consumer/User role) */}
+              {currentRole === 'user' && (
+                <div className="relative" ref={moreRef}>
+                  <button
+                    onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                    className={`px-2 xl:px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all duration-150 flex items-center gap-1 whitespace-nowrap ${
+                      isSecondaryActive
+                        ? 'bg-emerald-50 text-emerald-800 font-extrabold ring-1 ring-emerald-200/60 shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-950 hover:bg-emerald-50/50'
+                    }`}
+                  >
+                    <span>
+                      {isSecondaryActive
+                        ? secondaryTabs.find((t) => t.id === activeTab)?.label || 'More'
+                        : 'More'}
+                    </span>
+                    <ChevronDown className="w-3 h-3 text-slate-400" />
+                  </button>
 
-              {moreDropdownOpen && (
-                <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50 animate-in fade-in duration-150">
-                  <div className="text-[10px] uppercase font-bold text-slate-400 px-2.5 py-1">
-                    Tools & Records
-                  </div>
-                  {secondaryTabs.map((tab) => {
-                    const Icon = tab.icon;
-                    const isTabActive = activeTab === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => {
-                          setActiveTab(tab.id);
-                          setMoreDropdownOpen(false);
-                        }}
-                        className={`w-full text-left px-2.5 py-2 rounded-xl text-xs flex items-start gap-2.5 transition-all duration-150 ${
-                          isTabActive
-                            ? 'bg-emerald-50 text-emerald-800 font-bold ring-1 ring-emerald-200/50'
-                            : 'hover:bg-slate-50 hover:text-slate-900 text-slate-700'
-                        }`}
-                      >
-                        <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${isTabActive ? 'text-emerald-700' : 'text-slate-400'}`} />
-                        <div>
-                          <p className="font-bold leading-tight">{tab.label}</p>
-                          <p className="text-[10px] text-slate-400 leading-snug">{tab.desc}</p>
-                        </div>
-                      </button>
-                    );
-                  })}
+                  {moreDropdownOpen && (
+                    <div className="absolute left-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 p-2 z-50 animate-in fade-in duration-150">
+                      <div className="text-[10px] uppercase font-bold text-slate-400 px-2.5 py-1">
+                        Tools & Records
+                      </div>
+                      {secondaryTabs.map((tab) => {
+                        const Icon = tab.icon;
+                        const isTabActive = activeTab === tab.id;
+                        return (
+                          <button
+                            key={tab.id}
+                            onClick={() => {
+                              setActiveTab(tab.id);
+                              setMoreDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-2.5 py-2 rounded-xl text-xs flex items-start gap-2.5 transition-all duration-150 ${
+                              isTabActive
+                                ? 'bg-emerald-50 text-emerald-800 font-bold ring-1 ring-emerald-200/50'
+                                : 'hover:bg-slate-50 hover:text-slate-900 text-slate-700'
+                            }`}
+                          >
+                            <Icon className={`w-4 h-4 mt-0.5 shrink-0 ${isTabActive ? 'text-emerald-700' : 'text-slate-400'}`} />
+                            <div>
+                              <p className="font-bold leading-tight">{tab.label}</p>
+                              <p className="text-[10px] text-slate-400 leading-snug">{tab.desc}</p>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          </nav>
+            </nav>
+          </div>
 
           {/* Right Controls & Auth */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 ml-auto">
             {/* AI Quote Scanner Trigger */}
             <button
               onClick={onOpenScanner}
