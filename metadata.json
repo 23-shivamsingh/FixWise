@@ -1,0 +1,6 @@
+{
+  "name": "FixWise AI - Smart Repair Decision Platform",
+  "description": "AI-powered repair visual diagnosis, repairability scoring, repair vs replace calculator, quote comparison, and local repair booking platform.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

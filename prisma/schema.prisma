@@ -1,0 +1,356 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  USER
+  REPAIRER
+  ADMIN
+}
+
+enum DeviceCategory {
+  LAPTOP
+  SMARTPHONE
+  TABLET
+  AUDIO
+  OTHER
+}
+
+enum SeverityLevel {
+  LOW
+  MODERATE
+  CRITICAL
+}
+
+enum RepairCaseStatus {
+  DRAFT
+  DIAGNOSED
+  QUOTED
+  BOOKED
+  IN_REPAIR
+  COMPLETED
+  CANCELLED
+}
+
+enum RepairerTier {
+  ELITE
+  CERTIFIED
+  VERIFIED
+  STANDARD
+}
+
+enum BookingStatus {
+  REQUESTED
+  REPAIRER_ACCEPTED
+  DEVICE_RECEIVED
+  DIAGNOSIS_CONFIRMED
+  IN_PROGRESS
+  QUALITY_CHECK
+  READY_FOR_PICKUP
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  REFUNDED
+}
+
+enum VerdictType {
+  REPAIR
+  REPLACE
+  CONSIDER_REPAIR
+}
+
+model User {
+  id        String   @id @default(uuid())
+  clerkId   String?  @unique
+  email     String   @unique
+  name      String
+  phone     String?
+  role      UserRole @default(USER)
+  avatar    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  devices     Device[]
+  repairCases RepairCase[]
+  bookings    RepairBooking[]
+  reviews     Review[]
+
+  @@index([email])
+  @@index([clerkId])
+}
+
+model Device {
+  id                  String         @id @default(uuid())
+  userId              String
+  brand               String
+  model               String
+  category            DeviceCategory @default(LAPTOP)
+  purchaseDate        DateTime?
+  originalPriceINR    Float          @default(0)
+  batteryHealthPct    Int            @default(100)
+  computeHealthPct    Int            @default(100)
+  chassisCondition    String         @default("Good")
+  repairabilityScore  Int            @default(80)
+  serialNumber        String?
+  createdAt           DateTime       @default(now())
+  updatedAt           DateTime       @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repairCases RepairCase[]
+
+  @@index([userId])
+}
+
+model RepairCase {
+  id           String           @id @default(uuid())
+  userId       String
+  deviceId     String?
+  trackingCode String           @unique
+  status       RepairCaseStatus @default(DIAGNOSED)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  user               User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  device             Device?             @relation(fields: [deviceId], references: [id], onDelete: SetNull)
+  diagnosis          Diagnosis?
+  images             DiagnosisImage[]
+  repairabilityScore RepairabilityScore?
+  quotes             Quote[]
+  bookings           RepairBooking[]
+
+  @@index([userId])
+  @@index([trackingCode])
+}
+
+model Diagnosis {
+  id                      String        @id @default(uuid())
+  repairCaseId            String        @unique
+  brand                   String
+  deviceModel             String
+  category                String
+  identifiedIssue         String
+  issueCategory           String
+  severity                SeverityLevel @default(MODERATE)
+  confidenceScore         Int           @default(90)
+  estimatedMinCostINR     Float
+  estimatedMaxCostINR     Float
+  estimatedTurnaroundHours Int          @default(24)
+  rootCauses              Json          // Array of strings
+  safetyHazard            Boolean       @default(false)
+  safetyWarning           String?
+  troubleshootingSteps    Json          // Array of step objects
+  recommendedAction       String
+  rawAiResponse           Json?
+  createdAt               DateTime      @default(now())
+  updatedAt               DateTime      @updatedAt
+
+  repairCase RepairCase @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+}
+
+model DiagnosisImage {
+  id           String   @id @default(uuid())
+  repairCaseId String
+  imageUrl     String
+  thumbnail    String?
+  mimeType     String   @default("image/jpeg")
+  createdAt    DateTime @default(now())
+
+  repairCase RepairCase @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+
+  @@index([repairCaseId])
+}
+
+model RepairabilityScore {
+  id                     String      @id @default(uuid())
+  repairCaseId           String      @unique
+  score                  Int
+  partsAvailability      Int
+  disassemblyComplexity  Int
+  costFeasibility        Int
+  regionalServiceability Int
+  ageFactor              Int
+  verdict                VerdictType @default(REPAIR)
+  reason                 String
+  netSavingsINR          Float       @default(0)
+  breakEvenMonths        Float       @default(0)
+  createdAt              DateTime    @default(now())
+  updatedAt              DateTime    @updatedAt
+
+  repairCase RepairCase @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+}
+
+model Repairer {
+  id                 String       @id @default(uuid())
+  name               String
+  description        String
+  address            String
+  city               String       @default("Bengaluru")
+  latitude           Float
+  longitude          Float
+  phone              String
+  email              String
+  rating             Float        @default(4.8)
+  reviewCount        Int          @default(0)
+  isVerified         Boolean      @default(true)
+  tier               RepairerTier @default(CERTIFIED)
+  minPriceINR        Float
+  maxPriceINR        Float
+  avgTurnaroundHours Int          @default(24)
+  warrantyDays       Int          @default(90)
+  profileImage       String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+
+  services RepairerService[]
+  quotes   Quote[]
+  bookings RepairBooking[]
+  reviews  Review[]
+
+  @@index([city])
+  @@index([rating])
+}
+
+model RepairerService {
+  id                String   @id @default(uuid())
+  repairerId        String
+  category          String
+  name              String
+  estimatedPriceINR Float
+  estimatedHours    Int      @default(24)
+  createdAt         DateTime @default(now())
+
+  repairer Repairer @relation(fields: [repairerId], references: [id], onDelete: Cascade)
+
+  @@index([repairerId])
+}
+
+model Quote {
+  id             String    @id @default(uuid())
+  repairCaseId   String
+  repairerId     String
+  partsCostINR   Float
+  laborCostINR   Float
+  totalCostINR   Float
+  turnaroundDays Int       @default(1)
+  warrantyDays   Int       @default(90)
+  fairnessScore  Int       @default(95)
+  isBestValue    Boolean   @default(false)
+  isLowestPrice  Boolean   @default(false)
+  isFastest      Boolean   @default(false)
+  notes          String?
+  validUntil     DateTime?
+  createdAt      DateTime  @default(now())
+
+  repairCase RepairCase     @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+  repairer   Repairer       @relation(fields: [repairerId], references: [id], onDelete: Cascade)
+  booking    RepairBooking?
+
+  @@index([repairCaseId])
+  @@index([repairerId])
+}
+
+model RepairBooking {
+  id              String        @id @default(uuid())
+  repairCaseId    String
+  quoteId         String        @unique
+  repairerId      String
+  userId          String
+  trackingCode    String        @unique
+  status          BookingStatus @default(REQUESTED)
+  scheduledDate   DateTime
+  scheduledSlot   String
+  customerName    String
+  customerPhone   String
+  customerAddress String
+  totalAmountINR  Float
+  paymentStatus   PaymentStatus @default(PENDING)
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  repairCase    RepairCase             @relation(fields: [repairCaseId], references: [id], onDelete: Cascade)
+  quote         Quote                  @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  repairer      Repairer               @relation(fields: [repairerId], references: [id], onDelete: Cascade)
+  user          User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  statusHistory RepairStatusHistory[]
+  warranty      Warranty?
+  review        Review?
+  impactRecords ImpactRecord[]
+
+  @@index([userId])
+  @@index([repairerId])
+  @@index([trackingCode])
+  @@index([status])
+}
+
+model RepairStatusHistory {
+  id        String        @id @default(uuid())
+  bookingId String
+  status    BookingStatus
+  note      String?
+  updatedBy String        @default("SYSTEM")
+  createdAt DateTime      @default(now())
+
+  booking RepairBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  bookingId  String   @unique
+  userId     String
+  repairerId String
+  rating     Int      @default(5)
+  comment    String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  booking  RepairBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repairer Repairer      @relation(fields: [repairerId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([repairerId])
+}
+
+model Warranty {
+  id            String   @id @default(uuid())
+  bookingId     String   @unique
+  warrantyCode  String   @unique
+  warrantyDays  Int      @default(90)
+  startDate     DateTime @default(now())
+  expiryDate    DateTime
+  coverageTerms String   @default("Comprehensive parts & labor repair guarantee with zero deductible.")
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  booking RepairBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
+
+model ImpactRecord {
+  id               String         @id @default(uuid())
+  userId           String?
+  bookingId        String?
+  category         DeviceCategory @default(LAPTOP)
+  wasteAvoidedKg   Float          @default(0.5)
+  moneySavedINR    Float          @default(5000)
+  co2PreventedKg   Float          @default(15.0)
+  waterSavedLiters Float          @default(800.0)
+  monthsExtended   Int            @default(24)
+  createdAt        DateTime       @default(now())
+
+  booking RepairBooking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([bookingId])
+}
