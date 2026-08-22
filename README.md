@@ -1097,19 +1097,27 @@ FixWise aims to:
 
 ---
 
-# 👤 Team
+## 👤 Team
 
-### FixWise AI
+### Mantrayle
 
-Built as a hackathon project focused on combining:
+**Built independently by Shivam Singh**
 
-**AI + Repair Intelligence + Decision Support + Sustainable Technology**
+Mantrayle is an independently built project focused on making repair decisions **smarter, more transparent, and more sustainable**.
+
+FixWise AI brings together:
+
+**AI Diagnosis · Repair Intelligence · Cost Analysis · Decision Support · Sustainability**
+
+From identifying potential device issues to comparing repair and replacement costs, FixWise AI is designed as an end-to-end **Repair Decision Intelligence** platform.
+
+> **Built solo. Designed to solve a real-world problem.**
 
 ---
 
-# 📄 License
+## 📄 License
 
-This project was created as a hackathon project.
+This project is provided for demonstration and educational purposes.
 
 All rights reserved unless otherwise specified by the project authors.
 
@@ -1117,7 +1125,7 @@ All rights reserved unless otherwise specified by the project authors.
 
 <p align="center">
 
-### 🔧 FixWise AI
+# 🔧 FixWise AI
 
 **Repair smarter. Replace less.**
 
@@ -1126,4 +1134,3 @@ All rights reserved unless otherwise specified by the project authors.
 <p align="center">
   <em>Make the repair decision before making the replacement.</em>
 </p>
-
