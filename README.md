@@ -327,8 +327,6 @@ This allows judges to quickly understand the complete product flow.
   <img src="docs/screenshots/diagnose.png" alt="FixWise AI Diagnosis" width="100%">
 </p>
 
-> 📌 Replace `docs/screenshots/diagnose.png` with your actual screenshot path.
-
 ---
 
 ## 📊 Dashboard
@@ -337,7 +335,13 @@ This allows judges to quickly understand the complete product flow.
   <img src="docs/screenshots/dashboard.png" alt="FixWise AI Dashboard" width="100%">
 </p>
 
-> 📌 Replace `docs/screenshots/dashboard.png` with your actual screenshot path.
+<p align="center">
+  <img src="docs/screenshots/dashboard1.png" alt="FixWise AI Dashboard" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/dashboard2.png" alt="FixWise AI Dashboard" width="100%">
+</p>
 
 ---
 
@@ -347,8 +351,6 @@ This allows judges to quickly understand the complete product flow.
   <img src="docs/screenshots/repairers.png" alt="FixWise AI Repairers" width="100%">
 </p>
 
-> 📌 Replace `docs/screenshots/repairers.png` with your actual screenshot path.
-
 ---
 
 ## 🧾 Repair Quotes
@@ -357,7 +359,6 @@ This allows judges to quickly understand the complete product flow.
   <img src="docs/screenshots/quotes.png" alt="FixWise AI Repair Quotes" width="100%">
 </p>
 
-> 📌 Replace `docs/screenshots/quotes.png` with your actual screenshot path.
 
 ---
 
@@ -367,7 +368,6 @@ This allows judges to quickly understand the complete product flow.
   <img src="docs/screenshots/track-repairs.png" alt="FixWise AI Repair Tracking" width="100%">
 </p>
 
-> 📌 Replace `docs/screenshots/track-repairs.png` with your actual screenshot path.
 
 ---
 
@@ -376,8 +376,6 @@ This allows judges to quickly understand the complete product flow.
 <p align="center">
   <img src="docs/screenshots/passport.png" alt="FixWise AI Device Passport" width="100%">
 </p>
-
-> 📌 Replace `docs/screenshots/passport.png` with your actual screenshot path.
 
 ---
 
@@ -1128,5 +1126,4 @@ All rights reserved unless otherwise specified by the project authors.
 <p align="center">
   <em>Make the repair decision before making the replacement.</em>
 </p>
-```
 
