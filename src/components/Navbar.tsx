@@ -77,7 +77,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenScanner }) => {
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
-  // Primary desktop tabs (high frequency)
+  // Primary desktop tabs
   const primaryTabs = [
     { id: 'home', label: 'Home' },
     { id: 'dashboard', label: 'Dashboard' },
@@ -88,29 +88,18 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenScanner }) => {
     { id: 'devices', label: 'Passports' },
   ];
 
+  if (currentRole === 'repairer') {
+    primaryTabs.push({ id: 'repairer_portal', label: 'Lab Workbench' });
+  } else if (currentRole === 'admin') {
+    primaryTabs.push({ id: 'admin_portal', label: 'Admin Analytics' });
+  }
+
   // Secondary tools in More dropdown
   const secondaryTabs = [
     { id: 'calculator', label: 'Calculator', icon: Calculator, desc: 'Repair vs Replace Economics' },
     { id: 'impact', label: 'Impact', icon: Leaf, desc: 'E-Waste & CO2 Avoided' },
     { id: 'history', label: 'History', icon: History, desc: 'Completed Repairs & Records' },
   ];
-
-  if (currentRole === 'repairer') {
-    secondaryTabs.unshift({
-      id: 'repairer_portal',
-      label: 'Lab Workbench',
-      icon: Store,
-      desc: 'Technician Job Management',
-    });
-  }
-  if (currentRole === 'admin') {
-    secondaryTabs.unshift({
-      id: 'admin_portal',
-      label: 'Admin Analytics',
-      icon: LayoutDashboard,
-      desc: 'System Telemetry & Platform Ops',
-    });
-  }
 
   const isSecondaryActive = secondaryTabs.some((t) => t.id === activeTab);
 
